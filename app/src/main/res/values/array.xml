@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_value_array">
+        <item>@string/pref_metric_value</item>
+        <item>@string/pref_imperial_value</item>
+    </string-array>
+    <string-array name="pref_option_array">
+        <item>@string/pref_metric_option</item>
+        <item>@string/pref_imperial_option</item>
+    </string-array>
+</resources>
