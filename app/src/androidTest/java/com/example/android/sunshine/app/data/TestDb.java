@@ -127,7 +127,7 @@ public class TestDb extends AndroidTestCase {
         Cursor c = db.rawQuery("SELECT * FROM "+ WeatherContract.LocationEntry.TABLE_NAME+";", null);
         // Move the cursor to a valid database row
         c.moveToFirst();
-        System.out.println("This is the value "+c.toString());
+        System.out.println("This is the value "+c.getString(c.getColumnIndex(WeatherContract.LocationEntry.COLUMN_CITY_NAME)));
        // assertTrue("Something happend",c.moveToNext());
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
