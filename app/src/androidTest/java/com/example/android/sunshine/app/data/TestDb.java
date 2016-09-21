@@ -112,16 +112,23 @@ public class TestDb extends AndroidTestCase {
     */
     public void testLocationTable() {
         // First step: Get reference to writable database
-
+        mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
+        SQLiteDatabase db = new WeatherDbHelper(
+                this.mContext).getWritableDatabase();
+        assertEquals(true, db.isOpen());
         // Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
-
+        /*
+        USED VALUES FROM createNorthPoleLocationValues
+         */
         // Insert ContentValues into database and get a row ID back
-
+        TestUtilities.insertNorthPoleLocationValues(mContext);
         // Query the database and receive a Cursor back
-
+        Cursor c = db.rawQuery("SELECT * FROM "+ WeatherContract.LocationEntry.TABLE_NAME+";", null);
         // Move the cursor to a valid database row
-
+        c.moveToFirst();
+        System.out.println("This is the value "+c.getString(c.getColumnIndex(WeatherContract.LocationEntry.COLUMN_CITY_NAME)));
+       // assertTrue("Something happend",c.moveToNext());
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
