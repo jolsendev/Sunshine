@@ -15,6 +15,7 @@
  */
 package com.example.android.sunshine.app.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -111,6 +112,7 @@ public class TestDb extends AndroidTestCase {
         also make use of the ValidateCurrentRecord function from within TestUtilities.
     */
     public void testLocationTable() {
+        insertLocation();
         // First step: Get reference to writable database
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new WeatherDbHelper(
@@ -119,22 +121,31 @@ public class TestDb extends AndroidTestCase {
         // Create ContentValues of what you want to insert
         // (you can use the createNorthPoleLocationValues if you wish)
         /*
-        USED VALUES FROM createNorthPoleLocationValues
+        USED VALUES FROM createNorthPoleLocationValue
          */
+        ContentValues values = TestUtilities.createNorthPoleLocationValues();
         // Insert ContentValues into database and get a row ID back
         TestUtilities.insertNorthPoleLocationValues(mContext);
         // Query the database and receive a Cursor back
-        Cursor c = db.rawQuery("SELECT * FROM "+ WeatherContract.LocationEntry.TABLE_NAME+";", null);
+        Cursor c = db.query(WeatherContract.LocationEntry.TABLE_NAME,
+                null, //all columns
+                null, //Columns for the "where" clause
+                null, //Values for the "where" clause
+                null, //cloumns to group by
+                null, //columns to filter by row groups
+                null); //sort order
         // Move the cursor to a valid database row
         c.moveToFirst();
-        System.out.println("This is the value "+c.getString(c.getColumnIndex(WeatherContract.LocationEntry.COLUMN_CITY_NAME)));
-       // assertTrue("Something happend",c.moveToNext());
+
+        TestUtilities.validateCurrentRecord("THis error", c, values);
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
 
         // Finally, close the cursor and database
 
+        c.close();
+        db.close();
     }
 
     /*
@@ -153,21 +164,41 @@ public class TestDb extends AndroidTestCase {
         // and our testLocationTable can only return void because it's a test.
 
         // First step: Get reference to writable database
-
+        mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
+        SQLiteDatabase db = new WeatherDbHelper(
+                this.mContext).getWritableDatabase();
+        assertEquals(true, db.isOpen());
         // Create ContentValues of what you want to insert
         // (you can use the createWeatherValues TestUtilities function if you wish)
-
+        Long locationValues = TestUtilities.insertNorthPoleLocationValues(mContext);
+        ContentValues values = TestUtilities.createWeatherValues(locationValues);
         // Insert ContentValues into database and get a row ID back
+        long locationRowId;
+        locationRowId = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, values);
+
+        // Verify we got a row back.
+        assertTrue("Error: Failure to insert North Pole Location Values", locationRowId != -1);
 
         // Query the database and receive a Cursor back
-
+        Cursor c = db.query(WeatherContract.WeatherEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
         // Move the cursor to a valid database row
-
+        assertTrue("Not a valid table row", c.moveToFirst());
         // Validate data in resulting Cursor with the original ContentValues
+        TestUtilities.validateCurrentRecord("Weather data is wrong", c, values);
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
+        assertFalse("There was more data to compare", c.moveToNext());
 
         // Finally, close the cursor and database
+        c.close();
+        db.close();
     }
 
 

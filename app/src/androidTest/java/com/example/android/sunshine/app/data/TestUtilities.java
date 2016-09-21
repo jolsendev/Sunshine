@@ -31,12 +31,19 @@ public class TestUtilities extends AndroidTestCase {
     }
 
     static void validateCurrentRecord(String error, Cursor valueCursor, ContentValues expectedValues) {
+
         Set<Map.Entry<String, Object>> valueSet = expectedValues.valueSet();
-        for (Map.Entry<String, Object> entry : valueSet) {
+
+        for (Map.Entry<String, Object> entry : valueSet)
+        {
             String columnName = entry.getKey();
+
             int idx = valueCursor.getColumnIndex(columnName);
+
             assertFalse("Column '" + columnName + "' not found. " + error, idx == -1);
+
             String expectedValue = entry.getValue().toString();
+
             assertEquals("Value '" + entry.getValue().toString() +
                     "' did not match the expected value '" +
                     expectedValue + "'. " + error, expectedValue, valueCursor.getString(idx));
@@ -95,6 +102,11 @@ public class TestUtilities extends AndroidTestCase {
 
         return locationRowId;
     }
+
+    /*
+    Students: You can uncomment this function once you have finished creating the
+    LocationEntry part of the WeatherContract as well as the WeatherDbHelper.
+ */
 
     /*
         Students: The functions we provide inside of TestProvider use this utility class to test
