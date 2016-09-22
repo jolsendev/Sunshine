@@ -121,10 +121,11 @@ public class WeatherProvider extends ContentProvider {
 
         // 2) Use the addURI function to match each of the types.  Use the constants from
         // WeatherContract to help define the types to the UriMatcher.
-        mUriMatcher.addURI(WEATHER);
+
+        mUriMatcher.addURI(WeatherContract.CONTENT_AUTHORITY,WeatherContract.PATH_WEATHER,WEATHER);
 
         // 3) Return the new matcher!
-        return null;
+        return mUriMatcher;
     }
 
     /*
