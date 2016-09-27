@@ -109,6 +109,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
      * @return the row ID of the added location.
      */
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
+
         // Students: First, check if the location with this city name exists in the db
         /*
         SElECT location_setting FROM locations WHERE location_setting == '{locationSetting}'
@@ -116,22 +117,37 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         String[] columnNames = {WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING};
         WeatherDbHelper mHelper = new WeatherDbHelper(mContext);
 
-        Cursor checkCurson = mHelper.getReadableDatabase().query(false,
+        ContentValues values = new ContentValues();
+        values.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,locationSetting);
+        values.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, cityName);
+        values.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, lat);
+        values.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, lon);
+
+        Cursor checkCursor = mHelper.getReadableDatabase().query(
+                false,
                 WeatherContract.LocationEntry.TABLE_NAME,
-                columnNames, //columnNames,   //columns
-                null, //locationSetting,   //selection
+                columnNames, //columns
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING+" = '"+locationSetting+"'", //selection
                 null,   //selectionArgs
                 null,   //group by
                 null,   //having
                 null,   //order by
                 null    //limit
                  );
-        if(checkCurson != null){
-            System.out.println("I DID IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(checkCursor.moveToFirst()){           //return id
+
+            return checkCursor.getInt(checkCursor.getColumnIndex(WeatherContract.LocationEntry._ID));
+
+        }else{
+            return mHelper.getWritableDatabase().insert(
+                    WeatherContract.LocationEntry.TABLE_NAME,
+                    null,
+                    values
+            );
+
         }
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
-        return -1;
     }
 
     /*
