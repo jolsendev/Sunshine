@@ -212,7 +212,9 @@ public class WeatherProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return retCursor;
     }
 
@@ -236,8 +238,9 @@ public class WeatherProvider extends ContentProvider {
                 break;
             }
             case LOCATION:{
-                //normalizeDate(values);
+                normalizeDate(values);
                 long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
+
                 if ( _id > 0 )
                     returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
                 else
@@ -257,24 +260,21 @@ public class WeatherProvider extends ContentProvider {
         // Student: Start by getting a writable database
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        int deletedRows = 0;
+        int deletedRows;
         // Student: Use the uriMatcher to match the WEATHER and LOCATION URI's we are going to
         // handle.  If it doesn't match these, throw an UnsupportedOperationException.
+        if(selection == null){selection = "1";}
         switch (match){
             case WEATHER:{
                 deletedRows = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
-                if(deletedRows == 0){
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                }
+                break;
             }
             case LOCATION:{
                 deletedRows = db.delete(WeatherContract.LocationEntry.TABLE_NAME, selection, selectionArgs );
-                if(deletedRows == 0){
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                }
+                break;
             }
             default:
-                break;
+                throw new UnsupportedOperationException("URI failed in delete: " + uri);
         }
         // Student: A null value deletes all rows.  In my implementation of this, I only notified
         // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection

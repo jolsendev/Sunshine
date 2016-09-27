@@ -18,6 +18,7 @@ package com.example.android.sunshine.app;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -25,7 +26,9 @@ import android.text.format.Time;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
+import com.example.android.sunshine.app.data.WeatherDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,6 +110,25 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
      */
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
         // Students: First, check if the location with this city name exists in the db
+        /*
+        SElECT location_setting FROM locations WHERE location_setting == '{locationSetting}'
+         */
+        String[] columnNames = {WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING};
+        WeatherDbHelper mHelper = new WeatherDbHelper(mContext);
+
+        Cursor checkCurson = mHelper.getReadableDatabase().query(false,
+                WeatherContract.LocationEntry.TABLE_NAME,
+                columnNames, //columnNames,   //columns
+                null, //locationSetting,   //selection
+                null,   //selectionArgs
+                null,   //group by
+                null,   //having
+                null,   //order by
+                null    //limit
+                 );
+        if(checkCurson != null){
+            System.out.println("I DID IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
         return -1;
