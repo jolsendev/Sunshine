@@ -30,7 +30,6 @@ import android.widget.ArrayAdapter;
 
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
-import com.example.android.sunshine.app.data.WeatherDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,10 +85,12 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
                 mContext.getString(R.string.pref_units_key),
                 mContext.getString(R.string.pref_metric_value));
 
-        if (unitType.equals(mContext.getString(R.string.pref_imperial_option))) {
+        if (unitType.equals(mContext.getString(R.string.pref_imperial_option)))
+        {
             high = (high * 1.8) + 32;
             low = (low * 1.8) + 32;
-        } else if (!unitType.equals(mContext.getString(R.string.pref_metric_option))) {
+        } else if (!unitType.equals(mContext.getString(R.string.pref_metric_option)))
+        {
             Log.d(LOG_TAG, "Unit type not found: " + unitType);
         }
 
@@ -113,13 +114,10 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
     long addLocation(String locationSetting, String cityName, double lat, double lon) {
 
         // Students: First, check if the location with this city name exists in the db
-        /*
-        SElECT location_setting FROM locations WHERE location_setting == '{locationSetting}'
-         */
+
         String[] columnNames = {
                 WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
                 WeatherContract.LocationEntry._ID};
-        WeatherDbHelper mHelper = new WeatherDbHelper(mContext);
 
         ContentValues values = new ContentValues();
         values.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,locationSetting);
@@ -135,7 +133,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
                 null
                  );
 
-        if(checkCursor.moveToFirst()){           //return id
+        if(checkCursor.moveToFirst()){
             int id = checkCursor.getInt(checkCursor.getColumnIndex(WeatherContract.LocationEntry._ID));
             return id;
 
@@ -145,8 +143,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
             return ContentUris.parseId(locationUri);
 
         }
-        // If it exists, return the current ID
-        // Otherwise, insert it using the content resolver and the base URI
     }
 
     /*
