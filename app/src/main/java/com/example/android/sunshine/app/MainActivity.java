@@ -14,7 +14,8 @@ import android.widget.Toast;
 public class MainActivity extends ActionBarActivity {
 
     public static String mLocation;
-    public String FORECASTFRAGMENT_TAG;
+    public String FORECASTFRAGMENT_TAG = "FFTAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
