@@ -76,6 +76,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public ForecastFragment() {
     }
 
+    public void onLocationChanged(){
+        updateWeather();
+        restartLoader(MY_LOADER_ID,null,this);
+
+    }
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
