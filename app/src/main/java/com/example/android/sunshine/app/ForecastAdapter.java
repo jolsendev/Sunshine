@@ -5,19 +5,15 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.android.sunshine.app.data.WeatherContract;
-
-import org.w3c.dom.Text;
 
 public class ForecastAdapter extends CursorAdapter {
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY= 1;
+    Context mContext;
 
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
+        this.mContext = context;
     }
 
     /**
@@ -25,7 +21,7 @@ public class ForecastAdapter extends CursorAdapter {
      */
     private String formatHighLows(double high, double low) {
         boolean isMetric = Utility.isMetric(mContext);
-        String highLowStr = Utility.formatTemperature(high, isMetric) + "/" + Utility.formatTemperature(low, isMetric);
+        String highLowStr = Utility.formatTemperature(mContext, high, isMetric) + "/" + Utility.formatTemperature(mContext, low, isMetric);
         return highLowStr;
     }
 
@@ -57,16 +53,15 @@ public class ForecastAdapter extends CursorAdapter {
 
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = -1;
+        if(viewType == VIEW_TYPE_TODAY)
+            layoutId = R.layout.list_item_forecast_today;
+        if(viewType == VIEW_TYPE_FUTURE_DAY)
+            layoutId = R.layout.list_item_forecast;
 
-        switch (viewType){
-            case VIEW_TYPE_TODAY:
-                return LayoutInflater.from(context).inflate(R.layout.list_item_forecast_today, parent,false);
-            case VIEW_TYPE_FUTURE_DAY:
-                 return LayoutInflater.from(context).inflate(R.layout.list_item_forcast, parent, false);
-            default:
-
-        }
-        return null;
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
+        ViewHolder mViewHolder = new ViewHolder(view);
+        view.setTag(mViewHolder);
+        return view;
     }
 
     @Override
@@ -86,31 +81,24 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
+        ViewHolder holder = (ViewHolder) view.getTag();
+
         boolean isMetric = Utility.isMetric(context);
 
-        ImageView forcastIcon = (ImageView) view.findViewById(R.id.list_item_icon);
-        forcastIcon.setImageResource(R.drawable.ic_launcher);
+        holder.imageView.setImageResource(R.drawable.ic_launcher);
 
-        TextView dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
         long dateInMilli = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
-        dateView.setText(Utility.getFriendlyDayString(context, dateInMilli));
+        holder.dateView.setText(Utility.getFriendlyDayString(context, dateInMilli));
 
-        TextView highTextView = (TextView) view.findViewById(R.id.list_item_high_textview);
         long highText = cursor.getLong(ForecastFragment.COL_WEATHER_MAX_TEMP);
-        highTextView.setText(Utility.formatTemperature(highText, isMetric));
+        holder.highView.setText(Utility.formatTemperature(context, highText, isMetric));
 
-        TextView lowTextView = (TextView) view.findViewById(R.id.list_item_low_textview);
         long lowText = cursor.getLong(ForecastFragment.COL_WEATHER_MIN_TEMP);
-        lowTextView.setText(Utility.formatTemperature(lowText, isMetric));
+        holder.lowView.setText(Utility.formatTemperature(context, lowText, isMetric));
 
-        TextView forecastTextView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
         String forecastText = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
-        forecastTextView.setText(forecastText);
+        holder.descView.setText(forecastText);
 
-
-
-        //TextView tv = (TextView)view;
-        //tv.setText(convertCursorRowToUXFormat(cursor));
     }
 }
 
