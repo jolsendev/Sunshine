@@ -174,4 +174,12 @@ public class Utility {
         }
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
+
+    public static String getPressure(Context context, String pressure){
+        return context.getString(R.string.format_pressure, Float.valueOf(pressure));
+    }
+
+    public static String getHumidity(Context context, String humidity){
+        return context.getString(R.string.format_humidity, Float.valueOf(humidity));
+    }
 }
