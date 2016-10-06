@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.sunshine.app.data.WeatherContract;
+
 public class ForecastAdapter extends CursorAdapter {
     private final int VIEW_TYPE_TODAY = 0;
     private final int VIEW_TYPE_FUTURE_DAY= 1;
@@ -81,11 +83,19 @@ public class ForecastAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
+
+        int viewType = getItemViewType(cursor.getPosition());
+
         ViewHolder holder = (ViewHolder) view.getTag();
 
         boolean isMetric = Utility.isMetric(context);
+        int weatherColmn = cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID);
+        int weatherId = cursor.getInt(weatherColmn);
 
-        holder.imageView.setImageResource(R.drawable.ic_launcher);
+        if(viewType == VIEW_TYPE_TODAY)
+            holder.imageView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+        else
+            holder.imageView.setImageResource(Utility.getIconResourceForWeatherCondition(weatherId));
 
         long dateInMilli = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         holder.dateView.setText(Utility.getFriendlyDayString(context, dateInMilli));
