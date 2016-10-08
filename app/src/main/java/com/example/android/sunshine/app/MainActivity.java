@@ -15,20 +15,24 @@ public class MainActivity extends ActionBarActivity {
 
     public static String mLocation;
     public String FORECASTFRAGMENT_TAG = "FFTAG";
+    private boolean mTwoPain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(),FORECASTFRAGMENT_TAG)
-                    .commit();
-        }
 
-        //Toast.makeText(this, "onCreate",Toast.LENGTH_SHORT).show();
+        if(findViewById(R.id.weather_detail_container) != null){
+            mTwoPain = true;
+            if(savedInstanceState == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailFragment())
+                        .commit();
+            }
+        }else{
+            mTwoPain = false;
+        }
 
     }
 
