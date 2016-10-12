@@ -28,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -76,6 +75,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private ForecastAdapter mForecastAdapter;
     private int mPosition;
     private ListView listView;
+    private boolean mUserTodayView;
+
+    public void setUserTodayLayout(boolean mTwoPane) {
+        mUserTodayView = mTwoPane;
+        mForecastAdapter.setUserTodayLayout(mTwoPane);
+    }
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -136,6 +141,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         // The CursorAdapter will take data from our cursor and populate the ListView.
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+
+        mForecastAdapter.setUserTodayLayout((mUserTodayView));
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
