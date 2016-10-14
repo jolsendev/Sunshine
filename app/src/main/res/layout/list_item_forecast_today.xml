@@ -6,8 +6,8 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="@drawable/touch_selector">
+    android:background="@drawable/touch_selector"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_height="wrap_content"

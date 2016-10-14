@@ -1,4 +1,3 @@
-package com.example.android.sunshine.app.data;
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -14,6 +13,7 @@ package com.example.android.sunshine.app.data;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.example.android.sunshine.app.data;
 
 import android.content.ComponentName;
 import android.content.ContentUris;
@@ -33,6 +33,7 @@ import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
 /*
     Note: This is not a complete set of tests of the Sunshine ContentProvider, but it does test
     that at least the basic functionality has been implemented correctly.
+
     Students: Uncomment the tests in this class as you implement the functionality in your
     ContentProvider to make sure that you've implemented things reasonably correctly.
  */
@@ -45,6 +46,7 @@ public class TestProvider extends AndroidTestCase {
        It also queries the ContentProvider to make sure that the database has been successfully
        deleted, so it cannot be used until the Query and Delete functions have been written
        in the ContentProvider.
+
        Students: Replace the calls to deleteAllRecordsFromDB with this one after you have written
        the delete functionality in the ContentProvider.
      */
@@ -82,25 +84,11 @@ public class TestProvider extends AndroidTestCase {
     }
 
     /*
-       This helper function deletes all records from both database tables using the database
-       functions only.  This is designed to be used to reset the state of the database until the
-       delete functionality is available in the ContentProvider.
-     */
-    public void deleteAllRecordsFromDB() {
-        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        db.delete(WeatherEntry.TABLE_NAME, null, null);
-        db.delete(LocationEntry.TABLE_NAME, null, null);
-        db.close();
-    }
-
-    /*
         Student: Refactor this function to use the deleteAllRecordsFromProvider functionality once
         you have implemented delete functionality there.
      */
     public void deleteAllRecords() {
-        deleteAllRecordsFromDB();
+        deleteAllRecordsFromProvider();
     }
 
     // Since we want each test to start with a clean slate, run deleteAllRecords

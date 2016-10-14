@@ -52,12 +52,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             }
         } else {
             mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
         }
 
-        ForecastFragment forecastFragment = ((ForecastFragment)getSupportFragmentManager()
-        .findFragmentById(R.id.fragment_forecast));
-
-        forecastFragment.setUserTodayLayout(!mTwoPane);
+        ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_forecast));
+        forecastFragment.setUseTodayLayout(!mTwoPane);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             return true;
         }
 
-        if (id == R.id.action_share) {
+        if (id == R.id.action_map) {
             openPreferredLocationInMap();
             return true;
         }
@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         super.onResume();
         String location = Utility.getPreferredLocation( this );
         // update the location in our second pane using the fragment manager
-        if (location != null && !location.equals(mLocation)) {
+            if (location != null && !location.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if ( null != ff ) {
                 ff.onLocationChanged();
@@ -127,7 +127,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     @Override
     public void onItemSelected(Uri contentUri) {
-
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
