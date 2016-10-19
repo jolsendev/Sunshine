@@ -15,8 +15,11 @@
  */
 package com.example.android.sunshine.app;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +27,12 @@ import android.view.MenuItem;
 
 public class DetailActivity extends ActionBarActivity {
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_detail);
 
         if (savedInstanceState == null) {
