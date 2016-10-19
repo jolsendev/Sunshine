@@ -107,5 +107,9 @@
                 android:layout_width="match_parent"
                 android:textAppearance="?android:textAppearanceLarge" />
         </LinearLayout>
+
+        <com.example.android.sunshine.app.MyView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </ScrollView>

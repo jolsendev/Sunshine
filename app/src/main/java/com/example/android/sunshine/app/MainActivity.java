@@ -23,7 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
+public class MainActivity extends ActionBarActivity {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -54,7 +54,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
-
         ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
@@ -117,15 +116,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             if ( null != ff ) {
                 ff.onLocationChanged();
             }
-            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-            if ( null != df ) {
-                df.onLocationChanged(location);
-            }
             mLocation = location;
         }
     }
 
-    @Override
     public void onItemSelected(Uri contentUri) {
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
