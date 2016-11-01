@@ -15,10 +15,14 @@
  */
 package com.example.android.sunshine.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -79,6 +83,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_CONDITION_ID = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -182,10 +188,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void updateWeather() {
         String location = Utility.getPreferredLocation(getActivity());
-        Intent intent = new Intent(getActivity(), SunshineService.class);
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,location);
-        getActivity().startService(intent);
-        //weatherTask.execute(location);
+
+        alarmMgr = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent receiverIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+        receiverIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,Utility.getPreferredLocation(getActivity()));
+        alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, receiverIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP,
+                SystemClock.currentThreadTimeMillis() +
+                        5000, alarmIntent);
+
     }
 
     @Override
